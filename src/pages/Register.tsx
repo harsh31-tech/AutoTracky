@@ -1,12 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  ArrowLeft,
-  Eye,
-  EyeOff,
-  ShieldCheck,
-  UserPlus,
-} from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, ShieldCheck, UserPlus } from "lucide-react";
 
 import Logo from "../components/ui/Logo";
 import Button from "../components/ui/Button";
@@ -15,6 +9,8 @@ import Input from "../components/ui/Input";
 import { registerUser } from "../services/authService";
 import { createUserProfile } from "../services/userService";
 import { generateBleId } from "../utils/generateBleId";
+
+type AuthError = Error & { code?: string };
 
 export default function Register() {
   const navigate = useNavigate();
@@ -28,9 +24,7 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  async function handleRegister(
-    event: React.FormEvent<HTMLFormElement>,
-  ) {
+  async function handleRegister(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     setError("");
@@ -64,31 +58,27 @@ export default function Register() {
 
       // 4. Go to dashboard
       navigate("/dashboard");
-    } catch (err: any) {
-      console.error("Registration error:", err);
+    } catch (err: unknown) {
+      const error = err as AuthError;
+      console.error("Registration error:", error);
 
-      console.log("Firebase error code:", err?.code);
-      console.log("Firebase error message:", err?.message);
+      console.log("Firebase error code:", error.code);
+      console.log("Firebase error message:", error.message);
 
-      if (err?.code === "auth/email-already-in-use") {
+      if (error.code === "auth/email-already-in-use") {
         setError("This email is already registered.");
-      } else if (err?.code === "auth/invalid-email") {
+      } else if (error.code === "auth/invalid-email") {
         setError("Please enter a valid email address.");
-      } else if (err?.code === "auth/weak-password") {
+      } else if (error.code === "auth/weak-password") {
         setError("Password must be at least 6 characters.");
-      } else if (err?.code === "auth/operation-not-allowed") {
-        setError(
-          "Email/Password authentication is not enabled in Firebase.",
-        );
-      } else if (err?.code === "PERMISSION_DENIED") {
+      } else if (error.code === "auth/operation-not-allowed") {
+        setError("Email/Password authentication is not enabled in Firebase.");
+      } else if (error.code === "PERMISSION_DENIED") {
         setError(
           "Firebase Database permission denied. Check your database rules.",
         );
       } else {
-        setError(
-          err?.message ||
-            "Registration failed. Please try again.",
-        );
+        setError(error.message || "Registration failed. Please try again.");
       }
     } finally {
       setLoading(false);
@@ -145,26 +135,20 @@ export default function Register() {
               </h1>
 
               <p className="mx-auto mt-2.5 max-w-sm text-sm leading-6 text-white/40">
-                Create your AutoTracky identity and start
-                tracking your journey.
+                Create your AutoTracky identity and start tracking your journey.
               </p>
             </div>
 
             {/* Form Card */}
             <div className="rounded-[28px] border border-white/[0.09] bg-white/[0.025] p-5 shadow-[0_20px_70px_rgba(0,0,0,0.25)] sm:p-7">
-              <form
-                onSubmit={handleRegister}
-                className="space-y-5"
-              >
+              <form onSubmit={handleRegister} className="space-y-5">
                 {/* Name */}
                 <Input
                   label="Full name"
                   type="text"
                   placeholder="Enter your name"
                   value={name}
-                  onChange={(e) =>
-                    setName(e.target.value)
-                  }
+                  onChange={(e) => setName(e.target.value)}
                   autoComplete="name"
                 />
 
@@ -174,9 +158,7 @@ export default function Register() {
                   type="tel"
                   placeholder="+91 XXXXX XXXXX"
                   value={mobile}
-                  onChange={(e) =>
-                    setMobile(e.target.value)
-                  }
+                  onChange={(e) => setMobile(e.target.value)}
                   autoComplete="tel"
                 />
 
@@ -186,9 +168,7 @@ export default function Register() {
                   type="email"
                   placeholder="you@example.com"
                   value={email}
-                  onChange={(e) =>
-                    setEmail(e.target.value)
-                  }
+                  onChange={(e) => setEmail(e.target.value)}
                   autoComplete="email"
                 />
 
@@ -196,39 +176,23 @@ export default function Register() {
                 <div className="relative">
                   <Input
                     label="Password"
-                    type={
-                      showPassword
-                        ? "text"
-                        : "password"
-                    }
+                    type={showPassword ? "text" : "password"}
                     placeholder="Create a password"
                     value={password}
-                    onChange={(e) =>
-                      setPassword(e.target.value)
-                    }
+                    onChange={(e) => setPassword(e.target.value)}
                     autoComplete="new-password"
                     className="pr-12"
                   />
 
                   <button
                     type="button"
-                    onClick={() =>
-                      setShowPassword(
-                        (previous) => !previous,
-                      )
-                    }
+                    onClick={() => setShowPassword((previous) => !previous)}
                     className="absolute bottom-3.5 right-4 flex items-center justify-center rounded-lg p-1 text-white/25 transition hover:bg-white/[0.05] hover:text-white/70"
                     aria-label={
-                      showPassword
-                        ? "Hide password"
-                        : "Show password"
+                      showPassword ? "Hide password" : "Show password"
                     }
                   >
-                    {showPassword ? (
-                      <EyeOff size={17} />
-                    ) : (
-                      <Eye size={17} />
-                    )}
+                    {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
                   </button>
                 </div>
 
@@ -283,10 +247,7 @@ export default function Register() {
 
             {/* Security */}
             <div className="mt-5 flex items-center justify-center gap-2">
-              <ShieldCheck
-                size={14}
-                className="text-white/20"
-              />
+              <ShieldCheck size={14} className="text-white/20" />
 
               <p className="text-[11px] leading-5 text-white/25">
                 Secure authentication powered by Firebase
