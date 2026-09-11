@@ -5,11 +5,17 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Landing />} />
+        {/* Public routes */}
+        <Route
+          path="/"
+          element={<Landing />}
+        />
 
         <Route
           path="/register"
@@ -21,9 +27,14 @@ function App() {
           element={<Login />}
         />
 
+        {/* Protected routes */}
         <Route
           path="/dashboard"
-          element={<Dashboard />}
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
         />
       </Routes>
     </BrowserRouter>
