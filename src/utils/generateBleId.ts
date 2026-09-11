@@ -4,7 +4,9 @@ export function generateBleId(): string {
   crypto.getRandomValues(bytes);
 
   const suffix = Array.from(bytes)
-    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .map((byte) =>
+      byte.toString(16).padStart(2, "0")
+    )
     .join("")
     .toUpperCase();
 

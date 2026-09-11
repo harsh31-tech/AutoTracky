@@ -1,10 +1,9 @@
-import { generateBleId } from "../utils/generateBleId";
-
 export default function Dashboard() {
   return (
-    <main>
-      <h1>Dashboard</h1>
-      <p>Connected device: {generateBleId()}</p>
+    <main className="flex min-h-screen items-center justify-center bg-[#050505] text-white">
+      <h1 className="text-3xl font-semibold">
+        AutoTracky Dashboard
+      </h1>
     </main>
   );
 }

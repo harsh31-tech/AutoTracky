@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
+  apiKey: "AIzaSyBDQUu41FSedfdMrpG41hqgNDVVBqxXMNk",
   authDomain: "autotracky32.firebaseapp.com",
   databaseURL: "https://autotracky32-default-rtdb.firebaseio.com",
   projectId: "autotracky32",
