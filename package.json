@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/core": "^8.5.2",
+    "@capacitor/local-notifications": "^8.3.1",
     "@tailwindcss/vite": "^4.3.3",
     "firebase": "^12.19.0",
     "lucide-react": "^1.44.0",
@@ -20,6 +23,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
+    "@capacitor/cli": "^8.5.2",
     "@eslint/js": "^10.0.1",
     "@rolldown/plugin-babel": "^0.2.3",
     "@types/babel__core": "^7.20.5",

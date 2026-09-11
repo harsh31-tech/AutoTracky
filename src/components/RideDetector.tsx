@@ -1,7 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Activity, Bell, CircleCheck, LoaderCircle } from "lucide-react";
 
 import { findRide, listenToRide, type Ride } from "../firebase/rideService";
+
+import {
+  initializeNotifications,
+  notifyRideDetected,
+} from "../services/notificationService";
 
 interface RideDetectorProps {
   deviceName: string;
@@ -11,6 +16,10 @@ export default function RideDetector({ deviceName }: RideDetectorProps) {
   const [ride, setRide] = useState<Ride | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  // Stores the previous Firebase detected state.
+  // null means we haven't received the first realtime value yet.
+  const previousDetectedRef = useRef<boolean | null>(null);
 
   useEffect(() => {
     if (!deviceName) {
@@ -26,6 +35,9 @@ export default function RideDetector({ deviceName }: RideDetectorProps) {
         setLoading(true);
         setError("");
 
+        // Initialize Android notification permission + channel
+        await initializeNotifications();
+
         // Find the ride using the stable device name
         const result = await findRide(deviceName);
 
@@ -34,10 +46,34 @@ export default function RideDetector({ deviceName }: RideDetectorProps) {
           return;
         }
 
+        // Set initial ride state
         setRide(result);
 
+        // Important:
+        // Set the initial Firebase state so we don't send
+        // a notification immediately when the app opens.
+        previousDetectedRef.current = result.detected === true;
+
         // Start realtime Firebase listener
-        unsubscribe = listenToRide(deviceName, (updatedRide) => {
+        unsubscribe = listenToRide(deviceName, async (updatedRide) => {
+          const detected = updatedRide.detected === true;
+
+          const previousDetected = previousDetectedRef.current;
+
+          // Send notification ONLY when:
+          //
+          // false → true
+          //
+          // This prevents notification spam when Firebase
+          // repeatedly sends detected: true.
+          if (previousDetected === false && detected === true) {
+            await notifyRideDetected(updatedRide.deviceName);
+          }
+
+          // Store current state for the next Firebase update
+          previousDetectedRef.current = detected;
+
+          // Update dashboard
           setRide(updatedRide);
         });
       } catch (error) {
@@ -51,12 +87,16 @@ export default function RideDetector({ deviceName }: RideDetectorProps) {
 
     initializeRide();
 
+    // Cleanup Firebase listener when component unmounts
     return () => {
       unsubscribe?.();
     };
   }, [deviceName]);
 
+  // --------------------------------------------------
   // Loading
+  // --------------------------------------------------
+
   if (loading) {
     return (
       <div className="flex items-center gap-3 rounded-[28px] border border-white/10 bg-white/[0.025] p-6">
@@ -69,7 +109,10 @@ export default function RideDetector({ deviceName }: RideDetectorProps) {
     );
   }
 
+  // --------------------------------------------------
   // Error
+  // --------------------------------------------------
+
   if (error) {
     return (
       <div className="rounded-[28px] border border-red-400/10 bg-red-400/[0.03] p-6">
@@ -88,11 +131,19 @@ export default function RideDetector({ deviceName }: RideDetectorProps) {
     );
   }
 
+  // --------------------------------------------------
+  // No ride
+  // --------------------------------------------------
+
   if (!ride) {
     return null;
   }
 
   const detected = ride.detected === true;
+
+  // --------------------------------------------------
+  // Dashboard
+  // --------------------------------------------------
 
   return (
     <div
