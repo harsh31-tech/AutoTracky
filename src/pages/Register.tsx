@@ -54,6 +54,7 @@ export default function Register() {
         mobile,
         email,
         bleId,
+        deviceName: "AUTOTRACKY_RIDE_01",
       });
 
       // 4. Go to dashboard
