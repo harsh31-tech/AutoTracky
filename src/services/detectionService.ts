@@ -27,7 +27,7 @@ export function listenToUserDetections(
           esp32Id: data.esp32Id,
           rssi: data.rssi,
           timestamp: data.timestamp,
-          deviceName: data.deviceName,
+          deviceName: data.deviceName ?? "",
         });
       }
     });

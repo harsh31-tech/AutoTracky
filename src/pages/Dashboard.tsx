@@ -4,6 +4,7 @@ import { Activity, CircleCheck, LoaderCircle, UserRound } from "lucide-react";
 import DashboardLayout from "../components/layout/DashboardLayout";
 import BleCard from "../components/dashboard/BleCard";
 import DetectionHistory from "../components/dashboard/DetectionHistory";
+import LostAndFoundStatus from "../components/LostAndFoundStatus";
 import RideDetector from "../components/RideDetector";
 
 import { auth } from "../firebase/config";
@@ -221,7 +222,10 @@ export default function Dashboard() {
           </div>
 
           {profile.bleId ? (
-            <DetectionHistory bleId={profile.bleId} />
+            <DetectionHistory
+              bleId={profile.bleId}
+              passengerId={auth.currentUser?.uid ?? ""}
+            />
           ) : (
             <div className="rounded-[28px] border border-white/10 bg-white/[0.025] p-6">
               <p className="text-sm text-white/35">
@@ -230,6 +234,12 @@ export default function Dashboard() {
             </div>
           )}
         </section>
+
+        {/* ================================================= */}
+        {/* LOST & FOUND */}
+        {/* ================================================= */}
+
+        <LostAndFoundStatus passengerId={auth.currentUser?.uid ?? ""} />
       </div>
     </DashboardLayout>
   );
