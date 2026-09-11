@@ -65,3 +65,14 @@ Submit Request
       ↓
 Firebase
 ```
+✨ Key Features
+Feature	Description
+📡 BLE Detection	Detects the configured BLE device/passenger
+🔌 ESP32 Integration	Uses ESP32 as the BLE hardware component
+⚡ Realtime Status	Dashboard responds to detection state changes
+🔔 Notifications	Android local notification for ride detection
+📱 Passenger Dashboard	View BLE, ride and account information
+🧭 Journey History	View previous vehicle detections
+🧳 Lost & Found	Report an item against a previous journey
+🔥 Firebase	Authentication and realtime data storage
+🤖 Android APK	React application packaged for Android
