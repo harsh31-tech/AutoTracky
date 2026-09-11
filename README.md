@@ -44,3 +44,24 @@ Android / AutoTracky App
           │
           ▼
        Firebase
+
+```
+Detection Flow
+ESP32 advertises BLE information.
+The system detects the expected BLE device.
+Ride/detection state is updated.
+The AutoTracky dashboard reflects the change.
+A local notification can be triggered.
+The detection becomes part of the passenger's journey history.
+
+```text
+Select Journey
+      ↓
+Report Lost Item
+      ↓
+Enter Item + Description
+      ↓
+Submit Request
+      ↓
+Firebase
+```
