@@ -82,6 +82,10 @@ Feature	Description
 
 Watch the AutoTracky Demo
 
+
+https://github.com/user-attachments/assets/a7881c8e-772d-461e-b7ff-02ee6373aa0f
+
+
 The demo shows the actual working prototype, including the BLE detection flow, application status/notification behavior, and Lost & Found workflow.
 
 🏗️ Architecture
@@ -115,18 +119,18 @@ The demo shows the actual working prototype, including the BLE detection flow, a
               └──────────────────┘
 ```
 Main Components
-ESP32 — BLE hardware component.
-BLE — Wireless detection mechanism.
-React + TypeScript — Application interface.
-Capacitor + Android — Mobile application layer.
-Firebase Authentication — User authentication.
-Firebase Realtime Database — Realtime application data.
-Local Notifications — Android ride-detection notifications.
+1.ESP32 — BLE hardware component.
+2.BLE — Wireless detection mechanism.
+3.React + TypeScript — Application interface.
+4.Capacitor + Android — Mobile application layer.
+5.Firebase Authentication — User authentication.
+6.Firebase Realtime Database — Realtime application data.
+7.Local Notifications — Android ride-detection notifications.
 
 🛠️ Tech Stack
-Frontend
-React
-TypeScript
+1.Frontend
+2.React
+3.TypeScript
 Vite
 Tailwind CSS
 Lucide React
